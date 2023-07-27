@@ -2,21 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
-
-class CustomUser(AbstractUser):
-    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-
-    def __str__(self):
-        return self.username
-
-
 
 class entreprises(models.Model):
     nom = models.CharField(max_length=200)
@@ -35,6 +23,25 @@ class entreprises(models.Model):
     def __str__(self):
         return self.nom
 
+class CustomUser(AbstractUser):
+    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def __str__(self):
+        return self.username
+    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def __str__(self):
+        return self.username
 
 class classes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -145,7 +152,7 @@ class ecritures(models.Model):
     devise = models.CharField(max_length=10, null=True, default=None)
     lettrer = models.IntegerField(default=0)
     dteupdt = models.DateTimeField(null=True, default=None)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
     class Meta:
@@ -216,3 +223,5 @@ class modelesRapportsCompta(models.Model):
 
     class Meta:
         db_table = 'modelesRapportsCompta'
+
+
