@@ -1,0 +1,17 @@
+[
+{"type":"header","version":"4.9.7","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"beviourdb"},
+{"type":"table","name":"cptclasses","database":"beviourdb","data":
+[
+{"id":"1","libelle":"Classe 1","libelle2":"Comptes de ressources durables","numero":"1","etat":"bilan","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"2","libelle":"Classe 2","libelle2":"Comptes d'actif immobilise","numero":"2","etat":"bilan","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"3","libelle":"Classe 3","libelle2":"Comptes de stocks","numero":"3","etat":"bilan","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"4","libelle":"Classe 4","libelle2":"comptes de tiers","numero":"4","etat":"bilan","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"5","libelle":"Classe 5","libelle2":"comptes de trésorerie","numero":"5","etat":"bilan","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"6","libelle":"Classe 6","libelle2":"comptes de charges des activités ordinaires","numero":"6","etat":"gestion","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"7","libelle":"Classe 7","libelle2":"Comptes de produits des activités ordinaires","numero":"7","etat":"gestion","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"8","libelle":"Classe 8","libelle2":"Comptes des autres charges et des autres produits","numero":"8","etat":"autre","datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"9","libelle":"Classe 9","libelle2":"Comptes des engagements hors bilan et comptes de la comptabilité analytique de gestion","numero":"9","etat":"gestion","datsyn":"2021-01-20 14:25:52","syn":"1"}
+]
+}
+]
