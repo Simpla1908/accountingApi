@@ -3,7 +3,7 @@ import json
 import os
 
 # Configure Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "votre_projet.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 import django
 
 django.setup()
