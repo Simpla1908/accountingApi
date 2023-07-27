@@ -43,6 +43,17 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+
+
+class compteur(models.Model):
+    id = models.AutoField(primary_key=True)
+    libelle = models.CharField(max_length=245)
+    numero = models.IntegerField()
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
+
+    class Meta:
+        db_table = 'compteur'
+        
 class classes(models.Model):
     id = models.AutoField(primary_key=True)
     libelle = models.CharField(max_length=245)
