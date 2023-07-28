@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'accountingDb',
-        'USER': 'root',
-        'PASSWORD': 'E1b2u3t4e5l6o@',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'accountingdb',
+        'USER': 'accountingus',
+        'PASSWORD': '123456789',
         'HOST': 'localhost',   # Si MySQL est installé localement. Sinon, remplacez par l'adresse IP ou le nom d'hôte approprié.
-        'PORT': '',            # Laissez vide pour utiliser le port par défaut (3306) ou spécifiez le port si nécessaire.
+        'PORT': '5432',            # Laissez vide pour utiliser le port par défaut (3306) ou spécifiez le port si nécessaire.
     }
 }
 

@@ -167,7 +167,7 @@ class ecritures(models.Model):
 
     entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
     class Meta:
-        db_table = 'cptecritures'
+        db_table = 'ecritures'
 
 
 class detailsecritures(models.Model):
