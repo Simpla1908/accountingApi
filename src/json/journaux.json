@@ -1,0 +1,15 @@
+[
+{"type":"header","version":"4.9.7","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"beviourdb"},
+{"type":"table","name":"cptjournal","database":"beviourdb","data":
+[
+{"id":"1","code":"HA","libelle":"Achat","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"2","code":"VT","libelle":"Ventes","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"3","code":"CA","libelle":"Caisse","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"4","code":"BQ","libelle":"Banque","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"5","code":"OD","libelle":"Operations diverses","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"6","code":"AN","libelle":"A-Nouveaux","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"},
+{"id":"7","code":"MM","libelle":"Mobile money","psedo":"0","site_id":null,"datsyn":"2021-01-20 14:25:52","syn":"1"}
+]
+}
+]

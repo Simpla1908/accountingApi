@@ -33,15 +33,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-
-    def __str__(self):
-        return self.username
+   
 
 
 
@@ -103,7 +95,7 @@ class souscomptes(models.Model):
     psedo = models.IntegerField(default=0)
     modif = models.IntegerField(default=0)
     suffixe = models.CharField(max_length=100, null=True, default=None)
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id', null=True, default=None)
 
     class Meta:
         db_table = 'souscomptes'
@@ -114,7 +106,7 @@ class journaux(models.Model):
     code = models.CharField(max_length=10)
     libelle = models.CharField(max_length=245)
     psedo = models.IntegerField(default=0)
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id', null=True, default=None)
 
     class Meta:
         db_table = 'journaux'
@@ -127,7 +119,6 @@ class journalcompte(models.Model):
 
     class Meta:
         db_table = 'journalcompte'
-        unique_together = (('compte_num', 'journal'),)
 
 
 class exercices(models.Model):
@@ -213,8 +204,8 @@ class rapportjournal(models.Model):
 
 class modelesRapportsCompta(models.Model):
     id = models.AutoField(primary_key=True)
-    compte_id = models.CharField(max_length=200, default='0')
-    saufbrut = models.CharField(max_length=200, default='0')
+    compte_id = models.CharField(max_length=200, default='0', null=True)
+    saufbrut = models.CharField(max_length=200, default='0', null=True)
     partielbrut = models.CharField(max_length=200, null=True, default=None)
     rubrique = models.CharField(max_length=200, null=True, default=None)
     solde = models.IntegerField(default=0, help_text="0 peu importe 1 debiteur 2 crediteur")
