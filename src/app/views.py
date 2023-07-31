@@ -9,23 +9,23 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class EntrepriseRetrieveUpdateDeleteView(EntrepriseMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
     
     
 class ExerciceListCreateView(ExerciceMixinView, generics.ListCreateAPIView):
     queryset = exercices.objects.all()
     serializer_class = ExerciceSerializer
-    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class ExerciceRetrieveUpdateDeleteView(ExerciceMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = exercices.objects.all()
     serializer_class = ExerciceSerializer
-    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
