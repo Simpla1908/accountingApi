@@ -1,6 +1,6 @@
 from rest_framework import  serializers
 from rest_framework.reverse import reverse
-from .models import entreprises,exercices,souscomptes,rapportjournal
+from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures
 
 class EntrepriseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +22,28 @@ class RapportjournalSerializer(serializers.ModelSerializer):
     class Meta:
         model = rapportjournal
         fields = ('id','dte','ref','compte','description','debit','credit','devise','journal','exercice','benprov','ecriture','entreprise')
+        
+
+
+class EcrituresSerializer(serializers.ModelSerializer):
+    detailsecriture= serializers.HyperlinkedIdentityField(view_name='ecriture-details', lookup_field='id')
+    journal_libelle = serializers.CharField(source='journal.libelle', read_only=True)
+    user_username = serializers.CharField(source='user.username', read_only=True)
+    exercice_intitule = serializers.CharField(source='exercice.lib', read_only=True)
+
+    class Meta:
+        model = ecritures
+        fields = ('id', 'dte', 'dteaff', 'dtetime', 'libelle', 'reference', 'beneficiaire',
+                  'journal', 'journal_libelle', 'exercice', 'exercice_intitule',
+                  'devise', 'user', 'user_username', 'entreprise','detailsecriture')
+        
+class DetailsEcritureSerializer(serializers.ModelSerializer):
+    compte_libelle = serializers.CharField(source='compte.libelle', read_only=True)
+    souscompte_libelle = serializers.CharField(source='souscompte.libelle', read_only=True)
+    categorie_libelle = serializers.CharField(source='categorie.libelle', read_only=True)
+
+    class Meta:
+        model = detailsecritures
+        fields = ('id', 'compte', 'debit', 'credit', 'devise', 'taux', 'ecriture',
+                  'entreprise', 'categorie', 'souscompte', 'compte_ecriture',
+                  'long_compte', 'compte_libelle', 'souscompte_libelle', 'categorie_libelle')

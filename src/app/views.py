@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from rest_framework import  generics
 from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal
-from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer
+from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 import json
@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from utils.compta import get_account_number
+from django.http import Http404
 
 
 # Create your views here.
@@ -50,9 +51,59 @@ class SouscompteRetrieveUpdateDeleteView(SouscompteMixinView, generics.RetrieveU
     #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
     
     
+class EcrituresListView(generics.ListAPIView):
+    serializer_class = EcrituresSerializer
+
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        entreprise_id = self.kwargs.get('entreprise_id')
+
+        # Récupérer toutes les écritures associées à l'entreprise spécifiée
+        queryset = ecritures.objects.filter(entreprise__id=entreprise_id)
+
+        return queryset
+
+class EcritureDetailsView(generics.ListAPIView):
+    serializer_class = DetailsEcritureSerializer
+
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        ecriture_id = self.kwargs.get('id')
+
+        # Récupérer toutes les écritures associées à l'entreprise spécifiée
+        queryset = detailsecritures.objects.filter(ecriture__id=ecriture_id)
+
+        return queryset
+   
+
 class RapportjournalView(generics.ListAPIView):
-    queryset = rapportjournal.objects.all()
     serializer_class = RapportjournalSerializer
+    
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        entreprise_id = self.kwargs.get('entreprise_id')  # Assurez-vous que le nom de l'argument correspond à celui de l'URL
+
+        # Récupérer les valeurs des paramètres pour les filtres
+        journal_id = self.request.GET.get('journal_id')
+        exercice_id = self.request.GET.get('exercice_id')
+        device = self.request.GET.get('device')  # Si vous avez un champ 'device' dans le modèle Rapportjournal
+
+        # Filtrer les écritures associées à l'entreprise spécifiée en fonction des paramètres
+        queryset = rapportjournal.objects.filter(entreprise__id=entreprise_id)
+
+        if journal_id:
+            queryset = queryset.filter(journal__id=journal_id)
+        if exercice_id:
+            queryset = queryset.filter(exercice__id=exercice_id)
+        if device:
+            queryset = queryset.filter(devise=device)
+        
+        # Filtrer les écritures en ordre croissant selon l'ID
+        queryset = queryset.order_by('id')
+
+
+        return queryset
+
 
 # @csrf_exempt
 @api_view(['POST'])

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView
+from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView,EcrituresListView,EcritureDetailsView
 
 urlpatterns = [
     
@@ -9,8 +9,10 @@ urlpatterns = [
     path('exercices/<int:pk>/', ExerciceRetrieveUpdateDeleteView.as_view(), name='exercice-retrieve-update-delete'),
     path('souscomptes/', SouscompteListCreateView.as_view(), name='souscompte-list-create'),
     path('souscomptes/<int:pk>/', SouscompteRetrieveUpdateDeleteView.as_view(), name='souscompte-retrieve-update-delete'),
-    path('rapportjournal/', RapportjournalView.as_view()),
     path('journalisation/', journalisationView, name='journalisation'),
+    path('ecritures/<int:entreprise_id>/',EcrituresListView.as_view(), name='ecritures-list'),
+    path('detailsecriture/<int:id>/', EcritureDetailsView.as_view(), name='ecriture-details'),
+    path('rapportjournal/<int:entreprise_id>/', RapportjournalView.as_view(), name='rapportjournal-list'),
 
 
 ]
