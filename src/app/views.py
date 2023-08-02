@@ -229,7 +229,7 @@ def journalisationView(request):
             
 
   
-class PlanComptable(APIView):
+class PlanComptableView(APIView):
     
     def get(self, request):
         classes = classes.objects.all()
