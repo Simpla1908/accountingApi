@@ -6,60 +6,59 @@ from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSeria
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 import json
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
-from utils.compta import get_account_number
 
 
 # Create your views here.
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    # permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class EntrepriseRetrieveUpdateDeleteView(EntrepriseMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
     
     
 class ExerciceListCreateView(ExerciceMixinView, generics.ListCreateAPIView):
     queryset = exercices.objects.all()
     serializer_class = ExerciceSerializer
-    # permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class ExerciceRetrieveUpdateDeleteView(ExerciceMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = exercices.objects.all()
     serializer_class = ExerciceSerializer
-    #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class SouscompteListCreateView(SouscompteMixinView, generics.ListCreateAPIView):
     queryset = souscomptes.objects.all()
     serializer_class = SouscompteSerializer
-   # permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
 
 
 class SouscompteRetrieveUpdateDeleteView(SouscompteMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = souscomptes.objects.all()
     serializer_class = SouscompteSerializer
-    #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
     
     
 class RapportjournalView(generics.ListAPIView):
     queryset = rapportjournal.objects.all()
     serializer_class = RapportjournalSerializer
 
-# @csrf_exempt
+@csrf_exempt
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
 def journalisationView(request):
         data = request.data  # Récupérez les données JSON envoyées dans le corps de la requête
         
+        bool_value = False
         totaldebit = 0
         totalcredit = 0
 
@@ -71,13 +70,13 @@ def journalisationView(request):
                 debit = float(item["debit"]) if item["debit"] else 0
                 credit = float(item["credit"]) if item["credit"] else 0
 
-                if not compte_id or (debit == 0 and credit == 0):
-                    message = "Le numero de compte est vide ou les colonnes debit et credit sont nulles à la fois"
-                    return JsonResponse({'message': message})
+                if not compte_id or debit == 0 or credit == 0:
+                    bool_value = True
 
                 totaldebit += debit
                 totalcredit += credit
 
+        if not bool_value:
             if totaldebit != totalcredit:
                 message = "Le total des débits n'est pas égal au total des crédits."
                 return JsonResponse({'message': message})
@@ -87,34 +86,19 @@ def journalisationView(request):
 
             for entry in data:
                 dte = entry["dte"]
-                dteaff = entry["dteaff"]
-                dtetime = entry["dtetime"]
                 libelle = entry["libelle"]
-                devise = entry["devise"]  # Supposons que 'devise' soit la même pour toutes les entrées
-                taux = entry["taux"] 
+                devise = entry["detailsecritures"][0]["devise"]  # Supposons que 'devise' soit la même pour toutes les entrées
                 journal_id = entry["journal"]
                 exercice_id = entry["exercice"]
-                reference = entry["reference"]
-                beneficiaire = entry["beneficiaire"]
-                entreprise_id = entry["entreprise"]
                 user_id = entry["user"]  # Supposons que vous ayez l'ID de l'utilisateur dans les données JSON
-                
-                if not dte or not dteaff or not dtetime or not libelle or not devise or not taux or not journal_id or not exercice_id or not reference or not beneficiaire or not entreprise_id or not user_id:
-                    message = "Veuillez remplir les champs vides"
-                    return JsonResponse({'message': message})
 
                 # Maintenant, vous pouvez créer une instance du modèle 'Ecritures' et l'enregistrer dans la base de données
                 ecriture = ecritures.objects.create(
                     dte=dte,
-                    dteaff=dteaff,
-                    dtetime=dtetime,
                     libelle=libelle,
-                    reference=reference,
-                    beneficiaire=beneficiaire,
-                    devise='',
+                    devise=devise,
                     journal_id=journal_id,
                     exercice_id=exercice_id,
-                    entreprise_id=entreprise_id,
                     user_id=user_id
                 )
 
@@ -128,7 +112,6 @@ def journalisationView(request):
                     # Supposons que 'categorie_id' et 'souscompte_id' soient disponibles dans les données JSON
                     categorie_id = item["categorie"]
                     souscompte_id = item["souscompte"]
-                    compte_ecriture = item["compte_ecriture"]
 
                     # Créez des instances du modèle 'DetailSecritures' ici et enregistrez-les
                     detail_instance = detailsecritures.objects.create(
@@ -138,25 +121,20 @@ def journalisationView(request):
                         libelle='',
                         numdoc='',
                         devise=devise,
-                        taux=taux,
+                        taux=0,
                         ecriture=ecriture,
                         categorie_id=categorie_id,
                         souscompte_id=souscompte_id,
-                        compte_ecriture=compte_ecriture,
-                        long_compte=0,
-                        entreprise_id=entreprise_id
+                        compte_ecriture='',
+                        long_compte=0
                     )
-                    compte_num=compte_ecriture
-                    long=len(compte_num)
-                    data=get_account_number(compte_num, long)
-                    compteLib= data['lib']
-                    compte=compte_num+' '+compteLib
+
                     # En option, créez des instances du modèle 'RapportJournal' et enregistrez-les si nécessaire
                     rapport_instance =rapportjournal.objects.create(
                         dte=dte,
-                        ref=reference,
-                        compte=compte,
-                        description=libelle,
+                        ref='',
+                        compte='',
+                        description='',
                         debit=debit,
                         credit=credit,
                         devise=devise,
@@ -164,15 +142,15 @@ def journalisationView(request):
                         exercice_id=exercice_id,
                         psedo=0,
                         benprov='',
-                        ecriture=ecriture,
-                        entreprise_id=entreprise_id
+                        ecriture=ecriture
                     )
 
             # Renvoyez le JsonResponse ou renvoyez un modèle avec le contexte nécessaire
             return JsonResponse({'message': 'Succès !'})
 
-    
-            
+        else:
+            message = "Veuillez remplir les champs vides !"
+            return JsonResponse({'message': message})
 
   
 

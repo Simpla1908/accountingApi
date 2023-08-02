@@ -19,6 +19,9 @@ class entreprises(models.Model):
     idnat = models.CharField(max_length=100)
     rccm = models.CharField(max_length=100)
     taux = models.IntegerField()
+    
+    class Meta:
+        db_table = 'entreprises'
 
     def __str__(self):
         return self.nom
@@ -79,13 +82,7 @@ class comptes(models.Model):
         db_table = 'comptes'
 
 
-class compteEntreprise(models.Model):
-    id = models.AutoField(primary_key=True)
-    compte = models.ForeignKey('comptes', on_delete=models.CASCADE, db_column='compte_id')
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
 
-    class Meta:
-        db_table = 'compteEntreprise'
         
 class souscomptes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -155,8 +152,8 @@ class ecritures(models.Model):
     lettrer = models.IntegerField(default=0)
     dteupdt = models.DateTimeField(null=True, default=None)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id')
+    
     class Meta:
         db_table = 'ecritures'
 

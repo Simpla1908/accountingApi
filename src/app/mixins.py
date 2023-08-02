@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import entreprises,exercices
-from .serializers import EntrepriseSerializer,ExerciceSerializer
+from .models import entreprises,exercices,souscomptes
+from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer
 
 class EntrepriseMixinView(APIView):
     def get_object(self, pk):
@@ -108,3 +108,54 @@ class ExerciceMixinView(APIView):
 
         exercice.delete()
         return Response({"message": "Exercice supprimée avec succès."}, status=204)
+
+
+class SouscompteMixinView(APIView):
+    def get_object(self, pk):
+        try:
+            return souscomptes.objects.get(pk=pk)
+        except souscomptes.DoesNotExist:
+            return None
+
+
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        
+        if pk is None:
+            souscomptes_list = souscomptes.objects.all()
+            serializer = SouscompteSerializer(souscomptes_list, many=True)
+            return Response(serializer.data)
+        else:
+            souscompte = self.get_object(pk)
+            if souscompte is None:
+                return Response({"message": "Souscompte non trouvée."}, status=404)
+
+            serializer = SouscompteSerializer(souscompte)
+            return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = SouscompteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+    def put(self, request, pk):
+        souscompte = self.get_object(pk)
+        if souscompte is None:
+            return Response({"message": "Souscompte non trouvée."}, status=404)
+
+        serializer = SouscompteSerializer(souscompte, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        souscompte = self.get_object(pk)
+        if souscompte is None:
+            return Response({"message": "Souscompte non trouvée."}, status=404)
+
+        souscompte.delete()
+        return Response({"message": "Souscompte supprimée avec succès."}, status=204)

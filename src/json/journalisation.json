@@ -1,0 +1,8 @@
+[
+{"devise":"USD","taux":"2300","dte":"2023-08-02","dteaff":"2023-08-02","dtetime":"2023-07-31 14:05:29","libelle":"Hebergement","reference":"FHLBH01478","beneficiaire":"Mboyo  Yula Gladys","journal":"2","exercice":"3","user":"1","entreprise":"2","detailsecritures":
+[
+{"compte":"358","debit":"0","credit":"200","entreprise":"2","categorie":"78","souscompte":"","compte_ecriture":"701","long_compte":"3"},
+{"compte":"266","debit":"200","credit":"0","entreprise":"2","categorie":"65","souscompte":"574","compte_ecriture":"5712","long_compte":"4"}
+]
+}
+]
