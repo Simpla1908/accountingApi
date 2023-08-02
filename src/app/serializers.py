@@ -1,6 +1,6 @@
 from rest_framework import  serializers
 from rest_framework.reverse import reverse
-from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures
+from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures,comptes,categories,classes
 
 class EntrepriseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +47,25 @@ class DetailsEcritureSerializer(serializers.ModelSerializer):
         fields = ('id', 'compte', 'debit', 'credit', 'devise', 'taux', 'ecriture',
                   'entreprise', 'categorie', 'souscompte', 'compte_ecriture',
                   'long_compte', 'compte_libelle', 'souscompte_libelle', 'categorie_libelle')
+    
+    
+class ComptesSerializer(serializers.ModelSerializer):
+    souscomptes_set = SouscompteSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = comptes
+        fields = '__all__'
+
+class CategoriesSerializer(serializers.ModelSerializer):
+    comptes_set = ComptesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = categories
+        fields = '__all__'
+
+class ClassesSerializer(serializers.ModelSerializer):
+    categories_set = CategoriesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = classes
+        fields = '__all__'

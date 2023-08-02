@@ -1,8 +1,8 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from rest_framework import  generics
-from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal
-from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer
+from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes
+from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 import json
@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from utils.compta import get_account_number
 from django.http import Http404
+from rest_framework.views import APIView
 
 
 # Create your views here.
@@ -77,6 +78,8 @@ class EcritureDetailsView(generics.ListAPIView):
    
 
 class RapportjournalView(generics.ListAPIView):
+    
+    # url doit avoir cette forme rapportjournal/2/?journal_id=2&exercice_id=3&device=USD
     serializer_class = RapportjournalSerializer
     
     def get_queryset(self):
@@ -226,6 +229,11 @@ def journalisationView(request):
             
 
   
-
+class PlanComptable(APIView):
+    
+    def get(self, request):
+        classes = classes.objects.all()
+        serializer = ClassesSerializer(classes, many=True)
+        return Response(serializer.data)
 
 

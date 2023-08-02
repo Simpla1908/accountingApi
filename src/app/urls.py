@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView,EcrituresListView,EcritureDetailsView
+from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView,EcrituresListView,EcritureDetailsView,PlanComptable
 
 urlpatterns = [
     
@@ -13,6 +13,7 @@ urlpatterns = [
     path('ecritures/<int:entreprise_id>/',EcrituresListView.as_view(), name='ecritures-list'),
     path('detailsecriture/<int:id>/', EcritureDetailsView.as_view(), name='ecriture-details'),
     path('rapportjournal/<int:entreprise_id>/', RapportjournalView.as_view(), name='rapportjournal-list'),
+    path('plancomptable/', PlanComptable.as_view(), name='plan-comptable'),
 
 
 ]
