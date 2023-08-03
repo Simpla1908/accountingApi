@@ -9,7 +9,7 @@ import json
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
-from utils.compta import get_account_number
+from utils.utils import get_account_number
 from django.http import Http404
 from rest_framework.views import APIView
 
@@ -229,11 +229,15 @@ def journalisationView(request):
             
 
   
-class PlanComptableView(APIView):
+# class PlanComptableView(APIView):
     
-    def get(self, request):
-        classes = classes.objects.all()
-        serializer = ClassesSerializer(classes, many=True)
-        return Response(serializer.data)
+#     def get(self, request):
+#         classes = classes.objects.all()
+#         serializer = ClassesSerializer(classes, many=True)
+#         return Response(serializer.data)
 
+
+class PlanComptableView(generics.ListAPIView):
+    queryset = classes.objects.all()
+    serializer_class = ClassesSerializer
 

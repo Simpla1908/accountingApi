@@ -1,4 +1,4 @@
-# compta
+# utils
 from app.models import categories, comptes,souscomptes
 
 def get_account_number(compte_num, long):

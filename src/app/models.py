@@ -26,20 +26,6 @@ class entreprises(models.Model):
     def __str__(self):
         return self.nom
 
-class CustomUser(AbstractUser):
-    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
-    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-
-    def __str__(self):
-        return self.username
-   
-
-
-
 class compteur(models.Model):
     id = models.AutoField(primary_key=True)
     libelle = models.CharField(max_length=245)
@@ -223,4 +209,16 @@ class modelesRapportsCompta(models.Model):
     class Meta:
         db_table = 'modelesRapportsCompta'
 
+#GESTION DES UTILISATEURS
 
+class CustomUser(AbstractUser):
+    # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def __str__(self):
+        return self.username
+   
