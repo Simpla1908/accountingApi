@@ -1,10 +1,10 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
-from rest_framework import  generics
-from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes
-from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer
+from rest_framework import  generics, status
+from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes,CustomGroup,CustomUser,Group
+from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer,GroupSerializer,UtilisateurSerializer
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser,AllowAny
 import json
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
@@ -12,6 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 from utils.utils import get_account_number
 from django.http import Http404
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 # Create your views here.
@@ -226,18 +229,122 @@ def journalisationView(request):
             return JsonResponse({'message': 'Succès !'})
 
     
-            
-
-  
-# class PlanComptableView(APIView):
-    
-#     def get(self, request):
-#         classes = classes.objects.all()
-#         serializer = ClassesSerializer(classes, many=True)
-#         return Response(serializer.data)
 
 
 class PlanComptableView(generics.ListAPIView):
     queryset = classes.objects.all()
     serializer_class = ClassesSerializer
 
+
+class GroupList(generics.ListCreateAPIView):
+    queryset = CustomGroup.objects.all()
+    serializer_class = GroupSerializer
+
+class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomGroup.objects.all()
+    serializer_class = GroupSerializer
+    
+    
+class UtilisateurList(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UtilisateurSerializer
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
+
+class UtilisateurDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UtilisateurSerializer
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        # Obtenir les groupes de l'utilisateur
+        groups = Group.objects.filter(user=instance)
+
+        # Serializer les groupes
+        group_serializer = GroupSerializer(groups, many=True)  # Assurez-vous d'avoir un serializer pour les groupes (GroupSerializer)
+
+        # Ajouter les données des groupes à la réponse
+        response_data = serializer.data
+        response_data['groups'] = group_serializer.data
+
+        return Response(response_data)
+    
+    
+
+# class UtilisateurLogin(generics.CreateAPIView):
+#     queryset = get_user_model().objects.all()
+#     serializer_class = UtilisateurSerializer
+#     permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
+
+
+#     def create(self, request, *args, **kwargs):
+#         # Valider les données de connexion
+#         email = request.data.get('email')
+#         password = request.data.get('password')
+
+#         try:
+#             utilisateur = get_user_model().objects.get(email=email)
+#         except get_user_model().DoesNotExist:
+#             return Response({"message": "Utilisateur non trouvé."}, status=status.HTTP_401_UNAUTHORIZED)
+
+#         if utilisateur.check_password(password):
+#             # Générer le token JWT
+#             refresh = RefreshToken.for_user(utilisateur)
+
+#             return Response({
+#                 "refresh": f"{settings.BEARER_PREFIX} {str(refresh)}",
+#                 "access": f"{settings.BEARER_PREFIX} {str(refresh.access_token)}",
+#             }, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"message": "Identifiants invalides."}, status=status.HTTP_401_UNAUTHORIZED)
+
+    
+    
+
+class UtilisateurLogin(generics.CreateAPIView):
+    # ... (autres attributs de classe)
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
+
+    def post(self, request, *args, **kwargs):
+        # Valider les données de connexion
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        try:
+            utilisateur = get_user_model().objects.get(email=email)
+        except get_user_model().DoesNotExist:
+            return Response({"message": "Utilisateur non trouvé."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if utilisateur.check_password(password):
+            # Générer le token JWT
+            refresh = RefreshToken.for_user(utilisateur)
+
+            # permissions = []
+            # if utilisateur.groups.exists():
+            #     group = utilisateur.groups.first()
+            #     permissions = list(group.permissions.values_list('codename', flat=True))
+            
+            permissions = []
+            if utilisateur.groups.exists():
+                for group in utilisateur.groups.all():
+                    permissions.extend(list(group.permissions.values_list('codename', flat=True)))
+                
+
+            user_data = {
+                "id": utilisateur.id,
+                "username": utilisateur.username,
+                "first_name": utilisateur.first_name,
+                "last_name": utilisateur.last_name,
+                "is_superuser": utilisateur.is_superuser,
+                "entreprise_id": utilisateur.entreprise_id,
+                "email": utilisateur.email,
+                "permissions": permissions,
+                "refresh": f"{settings.BEARER_PREFIX} {str(refresh)}",
+                "access": f"{settings.BEARER_PREFIX} {str(refresh.access_token)}",
+            }
+
+            return Response(user_data, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Identifiants invalides."}, status=status.HTTP_401_UNAUTHORIZED)

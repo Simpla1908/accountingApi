@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,Group
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
@@ -221,4 +221,19 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-   
+    
+    def save(self, *args, **kwargs):
+        # Assurez-vous de hacher le mot de passe avant de sauvegarder l'utilisateur
+        if self._state.adding:  # Pour ne hasher le mot de passe que lors de la création
+            self.set_password(self.password)
+        super().save(*args, **kwargs)
+    
+# Model Group to customize
+
+
+class CustomGroup(Group):
+    entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Groupe"
+        verbose_name_plural = "Groupes"

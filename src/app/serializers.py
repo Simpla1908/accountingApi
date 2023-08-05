@@ -1,6 +1,7 @@
 from rest_framework import  serializers
 from rest_framework.reverse import reverse
-from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures,comptes,categories,classes
+from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures,comptes,categories,classes,CustomGroup,CustomUser
+from django.contrib.auth import get_user_model
 
 class EntrepriseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,3 +70,18 @@ class ClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = classes
         fields = '__all__'
+        
+        
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomGroup
+        fields = '__all__'
+
+
+class UtilisateurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
+
+
+

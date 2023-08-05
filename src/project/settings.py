@@ -42,6 +42,38 @@ INSTALLED_APPS = [
     'utils',
 ]
 
+BEARER_PREFIX = 'Bearer'
+
+
+
+from datetime import timedelta
+
+# Configurez la durée de validité du token et du token de rafraîchissement
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Durée de validité du token
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Durée de validité du token de rafraîchissement
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),  # Durée de validité du token rafraîchi
+    'SLIDING_TOKEN_REFRESH_LIFETIME_IN_SECONDS': 604800,  # Durée en secondes du rafraîchissement du token
+    # Autres configurations...
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # ...
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    # ...
+}
+
+
+
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
