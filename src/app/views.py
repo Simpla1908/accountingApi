@@ -272,35 +272,6 @@ class UtilisateurDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(response_data)
     
     
-
-# class UtilisateurLogin(generics.CreateAPIView):
-#     queryset = get_user_model().objects.all()
-#     serializer_class = UtilisateurSerializer
-#     permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
-
-
-#     def create(self, request, *args, **kwargs):
-#         # Valider les données de connexion
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-
-#         try:
-#             utilisateur = get_user_model().objects.get(email=email)
-#         except get_user_model().DoesNotExist:
-#             return Response({"message": "Utilisateur non trouvé."}, status=status.HTTP_401_UNAUTHORIZED)
-
-#         if utilisateur.check_password(password):
-#             # Générer le token JWT
-#             refresh = RefreshToken.for_user(utilisateur)
-
-#             return Response({
-#                 "refresh": f"{settings.BEARER_PREFIX} {str(refresh)}",
-#                 "access": f"{settings.BEARER_PREFIX} {str(refresh.access_token)}",
-#             }, status=status.HTTP_200_OK)
-#         else:
-#             return Response({"message": "Identifiants invalides."}, status=status.HTTP_401_UNAUTHORIZED)
-
-    
     
 
 class UtilisateurLogin(generics.CreateAPIView):

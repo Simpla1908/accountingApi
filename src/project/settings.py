@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'app',
     'rest_framework',
     'utils',
+    'corsheaders',
+
 ]
 
 BEARER_PREFIX = 'Bearer'
@@ -82,6 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -142,7 +147,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = 'UTC'
 
@@ -163,3 +168,41 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'app.CustomUser'
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # L'origine de votre site React
+    # Ajoutez d'autres domaines si nécessaire
+]
+
+# Autoriser les en-têtes de requête spécifiques (vous pouvez ajuster cela en fonction de vos besoins)
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Autoriser les méthodes de requête spécifiques (vous pouvez ajuster cela en fonction de vos besoins)
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Autoriser les cookies à être inclus dans les requêtes (si nécessaire)
+CORS_ALLOW_CREDENTIALS = True
+
+LANGUAGES = [
+    ('fr', _('French')),
+    ('en', _('English')),
+    # ...
+]

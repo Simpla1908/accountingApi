@@ -214,6 +214,8 @@ class modelesRapportsCompta(models.Model):
 class CustomUser(AbstractUser):
     # Ajoutez tous les champs supplémentaires que vous souhaitez pour le modèle User
     entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, null=True, blank=True)
+    email = models.EmailField(unique=True)  # Assure l'unicité de l'adresse e-mail
+    is_superuser = models.BooleanField(default=True)  # Par défaut, is_superuser est True
 
     class Meta:
         verbose_name = _('user')
@@ -221,7 +223,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+        
     def save(self, *args, **kwargs):
         # Assurez-vous de hacher le mot de passe avant de sauvegarder l'utilisateur
         if self._state.adding:  # Pour ne hasher le mot de passe que lors de la création
