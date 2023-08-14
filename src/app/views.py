@@ -21,7 +21,7 @@ from django.conf import settings
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    # permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
 
 
 class EntrepriseRetrieveUpdateDeleteView(EntrepriseMixinView, generics.RetrieveUpdateDestroyAPIView):
@@ -282,11 +282,15 @@ class UtilisateurLogin(generics.CreateAPIView):
         # Valider les données de connexion
         email = request.data.get('email')
         password = request.data.get('password')
+        
+        print(email)
+        print(password)
+
 
         try:
             utilisateur = get_user_model().objects.get(email=email)
         except get_user_model().DoesNotExist:
-            return Response({"message": "Utilisateur non trouvé."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "Identifiants invalides."}, status=status.HTTP_401_UNAUTHORIZED)
 
         if utilisateur.check_password(password):
             # Générer le token JWT
@@ -319,3 +323,19 @@ class UtilisateurLogin(generics.CreateAPIView):
             return Response(user_data, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Identifiants invalides."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UtilisateursEntreprise(generics.ListAPIView):
+    
+    serializer_class = UtilisateurSerializer
+    
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        entreprise_id = self.kwargs.get('entreprise_id')  # Assurez-vous que le nom de l'argument correspond à celui de l'URL
+
+        # Filtrer les écritures associées à l'entreprise spécifiée en fonction des paramètres
+        queryset = CustomUser.objects.filter(entreprise__id=entreprise_id)
+        
+        # Filtrer les écritures en ordre croissant selon l'ID
+        queryset = queryset.order_by('username')
+        return queryset
