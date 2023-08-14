@@ -339,3 +339,34 @@ class UtilisateursEntreprise(generics.ListAPIView):
         # Filtrer les écritures en ordre croissant selon l'ID
         queryset = queryset.order_by('username')
         return queryset
+
+
+class GroupesEntreprise(generics.ListAPIView):
+    
+    serializer_class = GroupSerializer
+    
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        entreprise_id = self.kwargs.get('entreprise_id')  # Assurez-vous que le nom de l'argument correspond à celui de l'URL
+
+        # Filtrer les écritures associées à l'entreprise spécifiée en fonction des paramètres
+        queryset = CustomGroup.objects.filter(entreprise__id=entreprise_id)
+        
+        # Filtrer les écritures en ordre croissant selon l'ID
+        queryset = queryset.order_by('name')
+        return queryset
+
+class ExercicesEntreprise(generics.ListAPIView):
+    
+    serializer_class = ExerciceSerializer
+    
+    def get_queryset(self):
+        # Récupérer l'ID de l'entreprise à partir de l'URL
+        entreprise_id = self.kwargs.get('entreprise_id')  # Assurez-vous que le nom de l'argument correspond à celui de l'URL
+
+        # Filtrer les écritures associées à l'entreprise spécifiée en fonction des paramètres
+        queryset = exercices.objects.filter(entreprise__id=entreprise_id)
+        
+        # Filtrer les écritures en ordre croissant selon l'ID
+        queryset = queryset.order_by('lib')
+        return queryset
