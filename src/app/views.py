@@ -328,7 +328,7 @@ class UtilisateurLogin(generics.CreateAPIView):
 class UtilisateursEntreprise(generics.ListAPIView):
     
     serializer_class = UtilisateurSerializer
-    
+
     def get_queryset(self):
         # Récupérer l'ID de l'entreprise à partir de l'URL
         entreprise_id = self.kwargs.get('entreprise_id')  # Assurez-vous que le nom de l'argument correspond à celui de l'URL

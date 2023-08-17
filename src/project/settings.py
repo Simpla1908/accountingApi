@@ -54,7 +54,7 @@ from datetime import timedelta
 # Configurez la durée de validité du token et du token de rafraîchissement
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Durée de validité du token
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Durée de validité du token
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Durée de validité du token de rafraîchissement
     'SLIDING_TOKEN_LIFETIME': timedelta(days=7),  # Durée de validité du token rafraîchi
     'SLIDING_TOKEN_REFRESH_LIFETIME_IN_SECONDS': 604800,  # Durée en secondes du rafraîchissement du token
@@ -73,19 +73,16 @@ REST_FRAMEWORK = {
 }
 
 
-
-
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
 
 ]
 
@@ -189,14 +186,14 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # Autoriser les méthodes de requête spécifiques (vous pouvez ajuster cela en fonction de vos besoins)
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
 
 # Autoriser les cookies à être inclus dans les requêtes (si nécessaire)
 CORS_ALLOW_CREDENTIALS = True
