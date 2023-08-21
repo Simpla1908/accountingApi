@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from rest_framework import  generics, status
 from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes,CustomGroup,CustomUser,Group
-from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer,GroupSerializer,UtilisateurSerializer
+from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer,GroupSerializer,UtilisateurSerializer,PermissionSerializer
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser,AllowAny
 import json
@@ -14,6 +14,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.utils.translation import gettext as _
 from django.conf import settings
 
 
@@ -370,3 +372,25 @@ class ExercicesEntreprise(generics.ListAPIView):
         # Filtrer les écritures en ordre croissant selon l'ID
         queryset = queryset.order_by('lib')
         return queryset
+
+
+class AllPermissionsAPIView(APIView):
+    permission_classes = [IsAuthenticated]  # Exige que l'utilisateur soit authentifié
+
+    def get(self, request):
+        permissions = Permission.objects.all()
+        serializer = PermissionSerializer(permissions, many=True)
+        return Response(serializer.data)
+
+# class AllPermissionsAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         permissions = Permission.objects.all()
+#         translated_permissions = []
+
+#         for permission in permissions:
+#             translated_name = _(permission.name)
+#             translated_permissions.append({"name": translated_name})
+
+#         return Response(translated_permissions)

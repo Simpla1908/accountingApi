@@ -2,6 +2,7 @@ from rest_framework import  serializers
 from rest_framework.reverse import reverse
 from .models import entreprises,exercices,souscomptes,rapportjournal,ecritures,detailsecritures,comptes,categories,classes,CustomGroup,CustomUser
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 
 class EntrepriseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +86,7 @@ class UtilisateurSerializer(serializers.ModelSerializer):
 
 
 
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = '__all__'

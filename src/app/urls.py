@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView,EcrituresListView,EcritureDetailsView,PlanComptableView,GroupList,GroupDetail,UtilisateurList,UtilisateurDetail,UtilisateurLogin,UtilisateursEntreprise,GroupesEntreprise,ExercicesEntreprise
+from .views import EntrepriseListCreateView, EntrepriseRetrieveUpdateDeleteView,ExerciceListCreateView,ExerciceRetrieveUpdateDeleteView,SouscompteListCreateView,SouscompteRetrieveUpdateDeleteView,RapportjournalView,journalisationView,EcrituresListView,EcritureDetailsView,PlanComptableView,GroupList,GroupDetail,UtilisateurList,UtilisateurDetail,UtilisateurLogin,UtilisateursEntreprise,GroupesEntreprise,ExercicesEntreprise,AllPermissionsAPIView
 
 urlpatterns = [
     
@@ -22,6 +22,8 @@ urlpatterns = [
     path('utilisateurs_entreprise/<int:entreprise_id>/', UtilisateursEntreprise.as_view(), name='utilisateurs-entreprise'),
     path('utilisateurs/<int:pk>/', UtilisateurDetail.as_view(), name='utilisateur-detail'),
     path('utilisateur/login/', UtilisateurLogin.as_view(), name='utilisateur-login'),
+    path('all-permissions/', AllPermissionsAPIView.as_view(), name='all-permissions'),
+
 
 
 ]
