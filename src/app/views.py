@@ -17,6 +17,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.utils.translation import gettext as _
 from django.conf import settings
+from .permissions_translation import permissions_translation  # Importez le dictionnaire
+from django.contrib.contenttypes.models import ContentType  # Import ContentType
+from .permissions_translation import permissions_translation
 
 
 # Create your views here.
@@ -375,22 +378,9 @@ class ExercicesEntreprise(generics.ListAPIView):
 
 
 class AllPermissionsAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Exige que l'utilisateur soit authentifié
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         permissions = Permission.objects.all()
-        serializer = PermissionSerializer(permissions, many=True)
+        serializer = PermissionSerializer(permissions, many=True, context={'translation_dict': permissions_translation})
         return Response(serializer.data)
-
-# class AllPermissionsAPIView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         permissions = Permission.objects.all()
-#         translated_permissions = []
-
-#         for permission in permissions:
-#             translated_name = _(permission.name)
-#             translated_permissions.append({"name": translated_name})
-
-#         return Response(translated_permissions)

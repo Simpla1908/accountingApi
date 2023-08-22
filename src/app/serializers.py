@@ -86,7 +86,18 @@ class UtilisateurSerializer(serializers.ModelSerializer):
 
 
 
+# class PermissionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Permission
+#         fields = '__all__'
+
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = '__all__'
+        fields = ('id', 'name', 'codename', 'content_type')
+
+    def to_representation(self, instance):
+        translation_dict = self.context['translation_dict']
+        ret = super().to_representation(instance)
+        ret['name'] = translation_dict.get(instance.name, instance.name)
+        return ret
