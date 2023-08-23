@@ -35,6 +35,7 @@ class EntrepriseMixinView(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+    
 
     def put(self, request, pk):
         entreprise = self.get_object(pk)
@@ -42,6 +43,17 @@ class EntrepriseMixinView(APIView):
             return Response({"message": "Entreprise non trouvée."}, status=404)
 
         serializer = EntrepriseSerializer(entreprise, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
+    def patch(self, request, pk):
+        entreprise = self.get_object(pk)
+        if entreprise is None:
+            return Response({"message": "Entreprise non trouvée."}, status=404)
+
+        serializer = EntrepriseSerializer(entreprise, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -100,6 +112,17 @@ class ExerciceMixinView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+    
+    def patch(self, request, pk):  # Ajout de la méthode patch
+        exercice = self.get_object(pk)
+        if exercice is None:
+            return Response({"message": "Exercice non trouvée."}, status=404)
+
+        serializer = ExerciceSerializer(exercice, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
     def delete(self, request, pk):
         exercice = self.get_object(pk)
@@ -147,6 +170,17 @@ class SouscompteMixinView(APIView):
             return Response({"message": "Souscompte non trouvée."}, status=404)
 
         serializer = SouscompteSerializer(souscompte, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
+    def patch(self, request, pk):
+        souscompte = self.get_object(pk)
+        if souscompte is None:
+            return Response({"message": "Souscompte non trouvée."}, status=404)
+
+        serializer = SouscompteSerializer(souscompte, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

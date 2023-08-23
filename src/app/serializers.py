@@ -71,6 +71,8 @@ class ClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = classes
         fields = '__all__'
+        # ordering = ['libelle']  # Ordonner par le champ "libelle"
+
         
         
 class GroupSerializer(serializers.ModelSerializer):
