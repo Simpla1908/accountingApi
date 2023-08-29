@@ -256,7 +256,7 @@ class PlanComptableView(APIView):
                 
                 ligne = {
                         "id": category.id,
-                        "numero": category.numero,
+                        "numero": int(category.numero),
                         "compte": category.libelle,  
                         "classe": classe.libelle,  
                         "isSousCompte": False
@@ -270,7 +270,7 @@ class PlanComptableView(APIView):
                     
                     ligne = {
                         "id": compte.id,
-                        "numero": compte.numero,
+                        "numero": int(compte.numero),
                         "compte": compte.libelle,  
                         "classe": classe.libelle,  
                         "isSousCompte": False
@@ -280,18 +280,19 @@ class PlanComptableView(APIView):
                     
                     souscomptes = compte.souscomptes_set.all()
                     for souscompte in souscomptes:
-                        isSousCompte=False
-                        if souscompte.modif==1:
-                            isSousCompte=True
+                        isSousCompte = souscompte.modif == 1
                         ligne = {
                             "id": souscompte.id,
-                            "numero": souscompte.numero,
+                            "numero": int(souscompte.numero),
                             "compte": souscompte.libelle,  
                             "classe": classe.libelle,  
                             "isSousCompte": isSousCompte
                         }
                         data.append(ligne)
-                        
+                        # data_triee = sorted(data, key=lambda x: x["classe"])
+                        data_triee = sorted(data, key=lambda x: (x["classe"], x["numero"]))
+
+
     
         return Response(data)
 
