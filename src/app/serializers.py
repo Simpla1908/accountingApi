@@ -57,6 +57,8 @@ class ComptesSerializer(serializers.ModelSerializer):
     class Meta:
         model = comptes
         fields = '__all__'
+        ordering = ['numero']  # Ordonner par le champ "numero"
+
 
 class CategoriesSerializer(serializers.ModelSerializer):
     comptes_set = ComptesSerializer(many=True, read_only=True)
@@ -65,13 +67,13 @@ class CategoriesSerializer(serializers.ModelSerializer):
         model = categories
         fields = '__all__'
 
+
 class ClassesSerializer(serializers.ModelSerializer):
     categories_set = CategoriesSerializer(many=True, read_only=True)
 
     class Meta:
         model = classes
         fields = '__all__'
-        # ordering = ['libelle']  # Ordonner par le champ "libelle"
 
         
         

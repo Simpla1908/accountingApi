@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from rest_framework import  generics, status
-from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes,CustomGroup,CustomUser,Group
+from .models import entreprises,exercices,souscomptes,ecritures, detailsecritures, rapportjournal,classes,CustomGroup,CustomUser,Group,comptes,categories
 from .serializers import EntrepriseSerializer,ExerciceSerializer,SouscompteSerializer,RapportjournalSerializer,EcrituresSerializer,DetailsEcritureSerializer,ClassesSerializer,GroupSerializer,UtilisateurSerializer,PermissionSerializer
 from .mixins import EntrepriseMixinView,ExerciceMixinView,SouscompteMixinView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser,AllowAny
@@ -233,14 +233,69 @@ def journalisationView(request):
             # Renvoyez le JsonResponse ou renvoyez un modèle avec le contexte nécessaire
             return JsonResponse({'message': 'Succès !'})
 
+
+# class PlanComptableView(generics.ListAPIView):
+#     queryset = classes.objects.all()
+#     serializer_class = ClassesSerializer
     
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-class PlanComptableView(generics.ListAPIView):
-    queryset = classes.objects.all()
-    serializer_class = ClassesSerializer
+class PlanComptableView(APIView):
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
 
+    def get(self, request):
+        all_classes = classes.objects.all()
+        data = []
 
+        for classe in all_classes:
+            categories = classe.categories_set.all()
+
+            for category in categories:
+                
+                ligne = {
+                        "id": category.id,
+                        "numero": category.numero,
+                        "compte": category.libelle,  
+                        "classe": classe.libelle,  
+                        "isSousCompte": False
+                    }
+                data.append(ligne)
+                
+                
+                
+                comptes = category.comptes_set.all()
+                for compte in comptes:
+                    
+                    ligne = {
+                        "id": compte.id,
+                        "numero": compte.numero,
+                        "compte": compte.libelle,  
+                        "classe": classe.libelle,  
+                        "isSousCompte": False
+                    }
+                    data.append(ligne)
+                    
+                    
+                    souscomptes = compte.souscomptes_set.all()
+                    for souscompte in souscomptes:
+                        isSousCompte=False
+                        if souscompte.modif==1:
+                            isSousCompte=True
+                        ligne = {
+                            "id": souscompte.id,
+                            "numero": souscompte.numero,
+                            "compte": souscompte.libelle,  
+                            "classe": classe.libelle,  
+                            "isSousCompte": isSousCompte
+                        }
+                        data.append(ligne)
+                        
+    
+        return Response(data)
+
+    
 class GroupList(generics.ListCreateAPIView):
     queryset = CustomGroup.objects.all()
     serializer_class = GroupSerializer
