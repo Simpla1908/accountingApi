@@ -21,7 +21,6 @@ from .permissions_translation import permissions_translation  # Importez le dict
 from django.contrib.contenttypes.models import ContentType  # Import ContentType
 from .permissions_translation import permissions_translation
 
-
 # Create your views here.
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
     queryset = entreprises.objects.all()
@@ -239,8 +238,7 @@ def journalisationView(request):
 #     serializer_class = ClassesSerializer
     
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 class PlanComptableView(APIView):
     permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
@@ -259,6 +257,11 @@ class PlanComptableView(APIView):
                         "numero": int(category.numero),
                         "compte": category.libelle,  
                         "classe": classe.libelle,  
+                        "classeId": classe.id,  
+                        "category": "",  
+                        "categoryId": "",
+                        "compteLib": "",
+                        "compteId": "",
                         "isSousCompte": False
                     }
                 data.append(ligne)
@@ -273,6 +276,11 @@ class PlanComptableView(APIView):
                         "numero": int(compte.numero),
                         "compte": compte.libelle,  
                         "classe": classe.libelle,  
+                        "classeId": classe.id,  
+                        "category": category.libelle,  
+                        "categoryId":category.id,
+                        "compteLib": "",
+                        "compteId": "",
                         "isSousCompte": False
                     }
                     data.append(ligne)
@@ -286,13 +294,16 @@ class PlanComptableView(APIView):
                             "numero": int(souscompte.numero),
                             "compte": souscompte.libelle,  
                             "classe": classe.libelle,  
+                            "classeId": classe.id,  
+                            "category": category.libelle,  
+                            "categoryId":category.id,
+                            "compteLib": compte.libelle,
+                            "compteId": compte.id,
                             "isSousCompte": isSousCompte
                         }
                         data.append(ligne)
                         # data_triee = sorted(data, key=lambda x: x["classe"])
-                        data_triee = sorted(data, key=lambda x: (x["classe"], x["numero"]))
-
-
+                        # data_triee = sorted(data, key=lambda x: (x["classe"], x["numero"]))
     
         return Response(data)
 
