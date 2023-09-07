@@ -76,7 +76,7 @@ class souscomptes(models.Model):
     numero = models.CharField(max_length=50)
     compte = models.ForeignKey('comptes', on_delete=models.CASCADE, db_column='compte_id', null=True, default=None)
     psedo = models.IntegerField(default=0)
-    modif = models.IntegerField(default=0)
+    modif = models.IntegerField(default=1)
     suffixe = models.CharField(max_length=100, null=True, default=None)
     entreprise = models.ForeignKey('entreprises', on_delete=models.CASCADE, db_column='entreprise_id', null=True, default=None)
 

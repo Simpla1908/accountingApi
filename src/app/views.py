@@ -20,6 +20,7 @@ from django.conf import settings
 from .permissions_translation import permissions_translation  # Importez le dictionnaire
 from django.contrib.contenttypes.models import ContentType  # Import ContentType
 from .permissions_translation import permissions_translation
+from django.db.models import Max  # Importez Max depuis django.db.models
 
 # Create your views here.
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
@@ -50,7 +51,14 @@ class ExerciceRetrieveUpdateDeleteView(ExerciceMixinView, generics.RetrieveUpdat
 class SouscompteListCreateView(SouscompteMixinView, generics.ListCreateAPIView):
     queryset = souscomptes.objects.all()
     serializer_class = SouscompteSerializer
-   # permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+
+
+
+
+
+
+
 
 
 class SouscompteRetrieveUpdateDeleteView(SouscompteMixinView, generics.RetrieveUpdateDestroyAPIView):

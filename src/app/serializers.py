@@ -18,6 +18,24 @@ class SouscompteSerializer(serializers.ModelSerializer):
     class Meta:
         model = souscomptes
         fields = ('id','libelle','numero','compte','entreprise')
+        
+    def create(self, validated_data):
+        # Récupérez le dernier ID de la table
+        last_souscompte = souscomptes.objects.order_by('-id').first()
+
+        # Incrémentez la valeur du dernier ID ou commencez à 1 si la table est vide
+        if last_souscompte:
+            new_id = last_souscompte.id + 1
+        else:
+            new_id = 1
+
+        # Ajoutez le nouvel ID aux données validées
+        validated_data['id'] = new_id
+
+        # Créez et retournez le nouvel enregistrement
+        souscompte = souscomptes(**validated_data)
+        souscompte.save()
+        return souscompte
 
 
 class RapportjournalSerializer(serializers.ModelSerializer):
