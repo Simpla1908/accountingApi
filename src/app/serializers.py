@@ -15,9 +15,29 @@ class ExerciceSerializer(serializers.ModelSerializer):
         fields = ('id','lib','debut','fin','annee','entreprise')
         
 class SouscompteSerializer(serializers.ModelSerializer):
+    # Ajoutez les champs de vos modèles liés ici
+    compte_numero = serializers.CharField(source='compte.numero', read_only=True)
+    categorie_libelle = serializers.CharField(source='compte.categorie.libelle', read_only=True)
+    classe_libelle = serializers.CharField(source='compte.categorie.classe.libelle', read_only=True)
+
     class Meta:
         model = souscomptes
-        fields = ('id','libelle','numero','compte','entreprise')
+        fields = ('id', 'libelle', 'numero', 'compte', 'entreprise', 'compte_numero', 'categorie_libelle', 'classe_libelle')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Créez un dictionnaire avec les champs souhaités
+        json_data = {
+            "id": data["id"],
+            "libelle": data["libelle"],
+            "numero": data["numero"],
+            "compte": data["compte"],
+            "entreprise": data["entreprise"],
+            "compte_numero": data["compte_numero"],
+            "categorie_libelle": data["categorie_libelle"],
+            "classe_libelle": data["classe_libelle"]
+        }
+        return json_data
         
     def create(self, validated_data):
         # Récupérez le dernier ID de la table

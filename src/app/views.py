@@ -55,17 +55,16 @@ class SouscompteListCreateView(SouscompteMixinView, generics.ListCreateAPIView):
 
 
 
-
-
-
-
-
-
-class SouscompteRetrieveUpdateDeleteView(SouscompteMixinView, generics.RetrieveUpdateDestroyAPIView):
-    queryset = souscomptes.objects.all()
-    serializer_class = SouscompteSerializer
-    #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+# class SouscompteRetrieveUpdateDeleteView(SouscompteMixinView, generics.RetrieveUpdateDestroyAPIView):
+#     queryset = souscomptes.objects.all()
+#     serializer_class = SouscompteSerializer
+#     permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
     
+
+class SouscompteRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = souscomptes.objects.prefetch_related('compte__categorie__classe')
+    serializer_class = SouscompteSerializer
+    permission_classes = [IsAuthenticated]
     
 class EcrituresListView(generics.ListAPIView):
     serializer_class = EcrituresSerializer
