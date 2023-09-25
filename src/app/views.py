@@ -32,7 +32,7 @@ class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
 class EntrepriseRetrieveUpdateDeleteView(EntrepriseMixinView, generics.RetrieveUpdateDestroyAPIView):
     queryset = entreprises.objects.all()
     serializer_class = EntrepriseSerializer
-    #permission_classes = [IsAuthenticated]  # Nécessite une authentification pour accéder à la vue Ajoutez les permissions souhaitées ici
+    permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
 
     
     

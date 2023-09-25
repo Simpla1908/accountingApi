@@ -8,13 +8,13 @@ from django.conf import settings
 
 class entreprises(models.Model):
     nom = models.CharField(max_length=200)
-    logo = models.ImageField(upload_to='logos/', null=True, blank=True)
+    logo = models.TextField(null=True, blank=True)
     adresse = models.TextField()
     ville = models.CharField(max_length=100)
     code_postal = models.CharField(max_length=10)
     telephone = models.CharField(max_length=15)
     email = models.EmailField()
-    site_web = models.URLField(null=True, blank=True)
+    site_web = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     idnat = models.CharField(max_length=100)
     rccm = models.CharField(max_length=100)
