@@ -21,6 +21,7 @@ from .permissions_translation import permissions_translation  # Importez le dict
 from django.contrib.contenttypes.models import ContentType  # Import ContentType
 from .permissions_translation import permissions_translation
 from django.db.models import Max  # Importez Max depuis django.db.models
+from rest_framework.parsers import FileUploadParser
 
 # Create your views here.
 class EntrepriseListCreateView(EntrepriseMixinView, generics.ListCreateAPIView):
@@ -34,7 +35,7 @@ class EntrepriseRetrieveUpdateDeleteView(EntrepriseMixinView, generics.RetrieveU
     serializer_class = EntrepriseSerializer
     permission_classes = [AllowAny]  # Permet l'accès à tous, même non authentifiés
 
-    
+
     
 class ExerciceListCreateView(ExerciceMixinView, generics.ListCreateAPIView):
     queryset = exercices.objects.all()
